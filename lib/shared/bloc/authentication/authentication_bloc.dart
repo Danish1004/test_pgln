@@ -49,17 +49,14 @@ class AuthenticationBloc
           authToken: user.uid,
           email: event.email,
           name: user.displayName ?? '',
-          phone: user.phoneNumber ?? '',
         );
-        SessionManager.createLoginSession(
-          loginData,
-        );
+        SessionManager.createLoginSession(loginData);
         emit(const AppAuthenticated());
       } else {
         emit(AuthenticationNotAuthenticated());
       }
     } catch (e) {
-      final error = _getFirebaseErrors(e.toString());
+      final error = _getFirebaseErrors(e);
       emit(AuthenticationFailure(message: error));
     }
   }
@@ -79,39 +76,37 @@ class AuthenticationBloc
           authToken: user.uid,
           email: event.email,
           name: user.displayName ?? '',
-          phone: user.phoneNumber ?? '',
         );
-        SessionManager.createLoginSession(
-          loginData,
-        );
+        SessionManager.createLoginSession(loginData);
         emit(const AppAuthenticated());
       } else {
         emit(AuthenticationNotAuthenticated());
       }
     } catch (e) {
-      final error = _getFirebaseErrors(e.toString());
+      final error = _getFirebaseErrors(e);
       emit(AuthenticationFailure(message: error));
     }
   }
-}
 
-String _getFirebaseErrors(dynamic e) {
-  if (e is FirebaseAuthException) {
-    switch (e.code) {
-      case 'invalid-email':
-        return 'The email address is badly formatted.';
-      case 'user-not-found':
-        return 'No user found for that email.';
-      case 'wrong-password':
-        return 'Wrong password provided for that user.';
-      case 'email-already-in-use':
-        return 'The email address is already in use by another account.';
-      case 'operation-not-allowed':
-        return 'Operation not allowed. Please enable this service in the console.';
-      default:
-        return 'An undefined error happened. Please try again.';
+  // Error handling method
+  String _getFirebaseErrors(dynamic e) {
+    if (e is FirebaseAuthException) {
+      switch (e.code) {
+        case 'invalid-email':
+          return 'The email address is badly formatted.';
+        case 'user-not-found':
+          return 'No user found for that email.';
+        case 'wrong-password':
+          return 'Wrong password provided for that user.';
+        case 'email-already-in-use':
+          return 'The email address is already in use by another account.';
+        case 'operation-not-allowed':
+          return 'Operation not allowed. Please enable this service in the console.';
+        default:
+          return 'An undefined error happened. Please try again.';
+      }
+    } else {
+      return 'An unexpected error occurred: ${e.toString()}'; // More informative fallback
     }
-  } else {
-    return e.toString(); // Fallback for other types of exceptions
   }
 }

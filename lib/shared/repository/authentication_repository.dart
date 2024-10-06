@@ -20,8 +20,7 @@ class AuthenticationRepository {
 
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      print('Error: $e');
-      return null;
+      throw e;
     }
   }
 
@@ -31,8 +30,7 @@ class AuthenticationRepository {
           email: email, password: password);
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      print('Error: $e');
-      return null;
+      throw e;
     }
   }
 
