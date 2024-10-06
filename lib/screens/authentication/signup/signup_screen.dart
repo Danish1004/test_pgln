@@ -18,6 +18,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -42,8 +43,16 @@ class _SignupScreenState extends State<SignupScreen> {
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         bloc: authenticationBloc,
         listener: (context, state) {
+          if (state is AuthenticationLoading) {
+            setState(() {
+              isLoading = true;
+            });
+          }
           if (state is AuthenticationFailure) {
             UiUtils.showSnackBar(context, content: state.message);
+            setState(() {
+              isLoading = false;
+            });
           }
           if (state is AppAuthenticated) {
             context.go('/home');
@@ -127,14 +136,22 @@ class _SignupScreenState extends State<SignupScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text(
-                        'Signup',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: isLoading
+                          ? SizedBox(
+                              width: 18.toResponsiveWidth,
+                              height: 18.toResponsiveHeight,
+                              child: const CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.white),
+                              ))
+                          : const Text(
+                              'Signup',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 8.0),
                     Row(

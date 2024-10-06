@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pingolearn_assignment/shared/session_manager.dart';
 
 import 'dio_exceptions.dart';

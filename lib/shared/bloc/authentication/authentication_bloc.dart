@@ -59,7 +59,8 @@ class AuthenticationBloc
         emit(AuthenticationNotAuthenticated());
       }
     } catch (e) {
-      emit(AuthenticationFailure(message: e.toString()));
+      final error = _getFirebaseErrors(e.toString());
+      emit(AuthenticationFailure(message: error));
     }
   }
 
@@ -88,7 +89,29 @@ class AuthenticationBloc
         emit(AuthenticationNotAuthenticated());
       }
     } catch (e) {
-      emit(AuthenticationFailure(message: e.toString()));
+      final error = _getFirebaseErrors(e.toString());
+      emit(AuthenticationFailure(message: error));
     }
+  }
+}
+
+String _getFirebaseErrors(dynamic e) {
+  if (e is FirebaseAuthException) {
+    switch (e.code) {
+      case 'invalid-email':
+        return 'The email address is badly formatted.';
+      case 'user-not-found':
+        return 'No user found for that email.';
+      case 'wrong-password':
+        return 'Wrong password provided for that user.';
+      case 'email-already-in-use':
+        return 'The email address is already in use by another account.';
+      case 'operation-not-allowed':
+        return 'Operation not allowed. Please enable this service in the console.';
+      default:
+        return 'An undefined error happened. Please try again.';
+    }
+  } else {
+    return e.toString(); // Fallback for other types of exceptions
   }
 }
