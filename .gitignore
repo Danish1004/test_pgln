@@ -16,8 +16,8 @@ migrate_working_dir/
 *.iws
 .idea/
 .env
-/lib/env.dart
-/lib/env.g.dart
+/lib/env.dart/
+/lib/env.g.dart/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
